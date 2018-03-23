@@ -1,3 +1,11 @@
+var curr_result = null;
+
+const space_image = document.getElementById('space_image');
+
+space_image.addEventListener('mouseover', function(e) {
+    console.log("aye lmao");
+});
+
 function status(response) {
     if (response.status == 200) {
         return Promise.resolve(response);
@@ -11,7 +19,7 @@ function json(response) {
 }
 
 function parse_json(json) {
-    var {
+    return {
         data: [{
                     date_created,
                     description,
@@ -28,13 +36,17 @@ function search(query) {
         .then(status)
         .then(json)
         .then(parse_json)
+        .then(function(search_obj) {
+            curr_result = search_obj;
+            save_search(query, search_obj);
+        })
         .catch(function(err) {
             console.log("Error: " + err);
         })
 }
 
 function save_search(query, search_obj) {
-    window.localStorage.setItem(query, search_obj);
+    window.localStorage.setItem(query, JSON.stringify(search_obj));
 }
 
 Array.prototype.first = function() {
