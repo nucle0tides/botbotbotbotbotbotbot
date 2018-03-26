@@ -1,10 +1,8 @@
-var curr_result = null;
+var curr_result = curr_result || {};
 
 const space_image = document.getElementById('space_image');
-
-space_image.addEventListener('mouseover', function(e) {
-    console.log("aye lmao");
-});
+const space_title = document.getElementById('space_title');
+const space_caption = document.getElementById('space_caption');
 
 function status(response) {
     if (response.status == 200) {
@@ -31,7 +29,14 @@ function parse_json(json) {
     } = json.collection.items.first();
 }
 
+function update(search_obj) { 
+    space_image.src = curr_result.links.first().href;
+    space_title.innerHTML = `${curr_result.data.first().title}`;
+    space_caption.innerHTML = `&#8195;&#8195;&#8195;&#8195;${curr_result.data.first().description}`;
+}
+
 function search(query) {
+    if window.get
     fetch("https://images-api.nasa.gov/search?q=" + query + "&media_type=image")
         .then(status)
         .then(json)
@@ -40,6 +45,7 @@ function search(query) {
             curr_result = search_obj;
             save_search(query, search_obj);
         })
+        .then(update)
         .catch(function(err) {
             console.log("Error: " + err);
         })
